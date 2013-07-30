@@ -22,11 +22,15 @@ typedef struct
 }objData;
 
 // Return TRUE or FALSE
-int primalityTestParallel(uint128 value, int n_threads);
+int primalityTestParallel(uint128 value, int n_threads, FILE * fprime);
 uint128 sqrtuint128(uint128 value);
 void * testPrime(void * obj);
-objData * objCreate(uint128 value, uint128 start, uint128 end);
+objData * objCreate(uint128 value, uint128 start, uint128 end, uint128 * list);
 void deleteObjArray(objData ** obj, int n_threads);
+char * u128ToString(uint128 value);
+int findIndex(uint128 value, uint128 * list);
+uint128 * createList(FILE * fprime);
+
 
 
 

@@ -4,6 +4,7 @@
 #include <math.h>
 #include <pthread.h>
 
+#include "main.h"
 
 
 uint128 alphaTou128(const char * str)
@@ -17,6 +18,32 @@ uint128 alphaTou128(const char * str)
     return ret;
 }
 
+char * u128ToString(uint128 value)
+{
+  //INitilize Variables
+  char * n_str;
+  int strLen;
+  int num;
+  uint128 val = value;
+
+  //Main Body
+  while (val > 0)
+    {
+      strLen++;
+      val /= 10;
+    }
+  n_str = malloc(sizeof(char)*strLen+1);
+  n_str[strLen] = '\0';
+  while (value > 0)
+    {
+      strLen--;
+      num = value%10;
+      value /= 10;
+      n_str[strLen] = num + '0';
+    }
+  return n_str;
+}
+
 int primalityTestParallel(uint128 value, int n_threads, FILE * fprime)
 {
   //Initilize Variables
@@ -25,13 +52,17 @@ int primalityTestParallel(uint128 value, int n_threads, FILE * fprime)
   objData ** obj = malloc(sizeof(objData)*n_threads);
   int i;
   uint128 start = 0;
-  //find a way to do the interval
-  uint128 interval =  sqrtuint128(value)/n_threads;
+  uint128 interval;
   uint128 end;
   uint128 * primelist;
 
   //Main Body
   primelist = createList(fprime);
+  interval = findIndex(value,primelist)/n_threads;
+  if(interval < 1)
+    {
+      interval = 1;
+    }
   for (i = 0;i < n_threads;i++)
     {
       end = start + interval;
@@ -47,14 +78,31 @@ int primalityTestParallel(uint128 value, int n_threads, FILE * fprime)
 	{
 	  free(th);
 	  free(attr);
+	  free(primelist);
 	  deleteObjArray(obj,n_threads);
 	  return FALSE;
 	}
     }
   free(th);
   free(attr);
+  free(primelist);
   deleteObjArray(obj,n_threads);
   return TRUE;
+}
+
+int findIndex(uint128 value, uint128 * list)
+{
+  //Initilize Variables
+  int i;
+  uint128 sqrtVal = sqrtuint128(value);
+
+  //Main Body
+  for (i = 0;list[i] <= sqrtVal;i++);
+  if(list[i] == sqrtVal)
+    {
+      i--;
+    }
+  return i;
 }
 
 uint128 * createList(FILE * fprime)
@@ -62,15 +110,24 @@ uint128 * createList(FILE * fprime)
   //Initilize Variables
   uint128 * list;
   int count = 0;
+  char * n = malloc(sizeof(char)*40);
+  int i;
 
   //Main Body
   while (!feof(fprime))
     {
       count++;
+      fgets(n,40,fprime);
     }
   list = malloc(sizeof(uint128)*count);
   fseek(fprime,0,0);
-  fread(list,uint128,count,fprime);
+  for(i = 0;i < count; i++)
+    {
+      //fread(&n,sizeof(char),1,fprime);
+      fgets(n, 40, fprime);
+      list[i] = alphaTou128(n);
+    }
+  free(n);
   return list;
 }
 
@@ -124,16 +181,7 @@ void * testPrime(void * obj)
       data->isPrime = TRUE;
       return data;
     }
-  if (data->value % 2 == 0)
-    {
-      data->isPrime = FALSE;
-      return data;
-    }
-  if (data->start % 2 == 0)
-    {
-      data->start++;//Make sure that start value is odd
-    }
-  for (i = data->start;i <= data->end;i+=2)
+  for (i = data->start;i <= data->end;i++)
     {
       if (data->value % data->primes[i] == 0)
 	{

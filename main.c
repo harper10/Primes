@@ -44,10 +44,9 @@ void printUsage()
 /**
  * Program entry point
  */
-int main(int argc, char * * argv)
+int main(int argc, char ** argv)
 {
   //Initilize Variables
-  FILE * fprime;
   uint128 n;
   int n_threads;
 
@@ -56,13 +55,24 @@ int main(int argc, char * * argv)
     printUsage();
     return 0;
   }
-  fprime = fopen(argv[3],'r+');
+  char * n_str = u128ToString(n);
+
+
+}
+
+int PrimeFinder(char * n_str, char * str_n_threads)
+{
+  //Initilize Variables
+  FILE * fprime;
+
+  //Main Body
+  fprime = fopen("PrimeList","r+");
   if (fprime == NULL)
     {
       printf("File %s failed to open", argv[3]);
       return EXIT_FAILURE;
     }
-  n = alphaTou128(argv[1]);
+  n = alphaTou128(str_n);
 
     // How many concurrent threads?
   errno = 0; // so we know if strtol fails
@@ -82,13 +92,10 @@ int main(int argc, char * * argv)
     }
   */
   if(error) {
-      //free(n_str);
+    free(n_str);
     fclose(fprime);
     exit(1);
   }
-  /*
-    free(n_str);
-  */
     
   struct timeval time1;
   struct timeval time2;
@@ -99,12 +106,14 @@ int main(int argc, char * * argv)
   gettimeofday(&time2, NULL);
   if(is_prime) {
     printf("TRUE");
+    fprintf(fprime,"\n%s",n_str);
   } else {
     printf("FALSE");
   }
   printf(", %8.4fs\n", timeDiff(time1, time2));
 
   fclose(fprime);
+  free(n_str);
   return EXIT_SUCCESS;
 }
 

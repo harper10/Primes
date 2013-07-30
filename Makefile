@@ -2,8 +2,8 @@
 GCC = gcc
 CFLAGS = -g -Wall -Wshadow
 LIBS = -lm -lpthread
-SOURCES = pa06.c parallel-primes.c
-TARGET = pa06
+SOURCES = main.c PrimeFinder.c
+TARGET = PrimeFinder
 VALGRIND = valgrind --tool=memcheck --leak-check=full --verbose
 
 # -------------------------------------------------------------
@@ -23,7 +23,6 @@ build: $(TARGET)
 clean:
 	@cd $(CURDIR)
 	rm -rf $(TARGET) $(TARGET_O3) $(OBJF) output/typing.ppm output/memoutput 
-
 environment:
 	@mkdir -p outputs	
 	@mkdir -p $(OBJF)
