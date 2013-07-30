@@ -25,18 +25,18 @@ int primalityTestParallel(uint128 value, int n_threads, FILE * fprime)
   objData ** obj = malloc(sizeof(objData)*n_threads);
   int i;
   uint128 start = 0;
+  //find a way to do the interval
   uint128 interval =  sqrtuint128(value)/n_threads;
   uint128 end;
   uint128 * primelist;
 
   //Main Body
-  //I need to write a function that counts number of lines.
-  //Then create array and reads the data in all in one
+  primelist = createList(fprime);
   for (i = 0;i < n_threads;i++)
     {
       end = start + interval;
       pthread_attr_init(&attr[i]);
-      obj[i] = objCreate(value,start,end,fprime);
+      obj[i] = objCreate(value,start,end,primelist);
       start = end;
       pthread_create(&th[i],&attr[i],&testPrime,obj[i]);
     }
@@ -84,21 +84,17 @@ void deleteObjArray(objData ** obj, int n_threads)
   free(obj);
 }
 
-objData * objCreate(uint128 value, uint128 start, uint128 end, FILE * fprime)
+objData * objCreate(uint128 value, uint128 start, uint128 end, uint128 * list)
 {
   //Initilize Variables
   objData * obj = malloc(sizeof(objData));
 
   //Main Body
   obj->value = value;
-  if (start < 2)
-    {
-      start = 2;
-    }
   obj->start = start;
   obj->end = end;
   obj->isPrime = TRUE;
-  obj->primes = fprime;
+  obj->primes = list;
 
   return obj;
 }
@@ -139,7 +135,7 @@ void * testPrime(void * obj)
     }
   for (i = data->start;i <= data->end;i+=2)
     {
-      if (data->value % i == 0)
+      if (data->value % data->primes[i] == 0)
 	{
 	  data->isPrime = FALSE;
 	  return data;

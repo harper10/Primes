@@ -14,7 +14,7 @@ uint128 alphaTou128(const char * str);
 
 typedef struct 
 {
-  FILE * primes;
+  uint128 * primes;
   uint128 value;
   uint128 start;
   uint128 end;
