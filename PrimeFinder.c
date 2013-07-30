@@ -27,8 +27,11 @@ int primalityTestParallel(uint128 value, int n_threads, FILE * fprime)
   uint128 start = 0;
   uint128 interval =  sqrtuint128(value)/n_threads;
   uint128 end;
+  uint128 * primelist;
 
   //Main Body
+  //I need to write a function that counts number of lines.
+  //Then create array and reads the data in all in one
   for (i = 0;i < n_threads;i++)
     {
       end = start + interval;
@@ -52,6 +55,23 @@ int primalityTestParallel(uint128 value, int n_threads, FILE * fprime)
   free(attr);
   deleteObjArray(obj,n_threads);
   return TRUE;
+}
+
+uint128 * createList(FILE * fprime)
+{
+  //Initilize Variables
+  uint128 * list;
+  int count = 0;
+
+  //Main Body
+  while (!feof(fprime))
+    {
+      count++;
+    }
+  list = malloc(sizeof(uint128)*count);
+  fseek(fprime,0,0);
+  fread(list,uint128,count,fprime);
+  return list;
 }
 
 void deleteObjArray(objData ** obj, int n_threads)
