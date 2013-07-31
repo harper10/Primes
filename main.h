@@ -22,6 +22,7 @@ typedef struct
 }objData;
 
 // Return TRUE or FALSE
+int PrimeFinder(char * n_str, char * str_n_threads);
 int primalityTestParallel(uint128 value, int n_threads, FILE * fprime);
 uint128 sqrtuint128(uint128 value);
 void * testPrime(void * obj);

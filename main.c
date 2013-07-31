@@ -37,7 +37,7 @@ double timeDiff(struct timeval t1, struct timeval t2)
 void printUsage()
 {
     printf("\n"
-	   "   Usage: ./pa06 <number-to-test> <number-of-parallel-threads> <file-of-primes> \n"
+	   "   Usage: ./PrimeFinder <beginning number to test> <ending numberto test> \n"
 	   "\n");
 }
 
@@ -47,36 +47,54 @@ void printUsage()
 int main(int argc, char ** argv)
 {
   //Initilize Variables
+  uint128 start = alphaTou128(argv[1]);
+  uint128 end = alphaTou128(argv[2]);
   uint128 n;
-  int n_threads;
+  int error;
 
   //Main Body
-  if(argc != 4) {
+  if(argc != 3) {
     printUsage();
     return 0;
   }
-  char * n_str = u128ToString(n);
-
-
+  for (n = start;n <= end;n+=1)
+    {
+      char * n_str = u128ToString(n);
+      char * str_n_threads = u128ToString(sqrtuint128(n));
+      error = PrimeFinder(n_str, str_n_threads);
+      free(str_n_threads);
+      if (error == EXIT_FAILURE)
+	{
+	  return EXIT_FAILURE;
+	}
+    }
+  return EXIT_SUCCESS;
 }
 
 int PrimeFinder(char * n_str, char * str_n_threads)
 {
   //Initilize Variables
   FILE * fprime;
+  char * fprime_str = "PrimeList";
+  uint128 n;
+  int n_threads;
 
   //Main Body
-  fprime = fopen("PrimeList","r+");
+  fprime = fopen(fprime_str,"r+");
   if (fprime == NULL)
     {
-      printf("File %s failed to open", argv[3]);
+      printf("File %s failed to open",fprime_str);
       return EXIT_FAILURE;
     }
-  n = alphaTou128(str_n);
+  n = alphaTou128(n_str);
 
     // How many concurrent threads?
   errno = 0; // so we know if strtol fails
-  n_threads = strtol(argv[2], NULL, 10);
+  n_threads = strtol(str_n_threads, NULL, 10);
+  if (n_threads > 10)
+    {
+      n_threads = 10;
+    }
 
   // Was there an error in the input arguments?
   int error = FALSE;
@@ -100,7 +118,7 @@ int PrimeFinder(char * n_str, char * str_n_threads)
   struct timeval time1;
   struct timeval time2;
   gettimeofday(&time1, NULL);
-  printf("Testing if '%s' is prime with %d threads: ", argv[1], n_threads);
+  printf("Testing if '%s' is prime with %d threads: ", n_str, n_threads);
   fflush(stdout);
   int is_prime = primalityTestParallel(n, n_threads, fprime);
   gettimeofday(&time2, NULL);

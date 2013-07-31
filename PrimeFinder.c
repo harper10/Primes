@@ -55,6 +55,7 @@ int primalityTestParallel(uint128 value, int n_threads, FILE * fprime)
   uint128 interval;
   uint128 end;
   uint128 * primelist;
+  int ret = TRUE;
 
   //Main Body
   primelist = createList(fprime);
@@ -76,18 +77,14 @@ int primalityTestParallel(uint128 value, int n_threads, FILE * fprime)
       pthread_join(th[i],NULL);
       if (obj[i]->isPrime == FALSE)
 	{
-	  free(th);
-	  free(attr);
-	  free(primelist);
-	  deleteObjArray(obj,n_threads);
-	  return FALSE;
+	  ret = FALSE;
 	}
     }
   free(th);
   free(attr);
   free(primelist);
   deleteObjArray(obj,n_threads);
-  return TRUE;
+  return ret;
 }
 
 int findIndex(uint128 value, uint128 * list)
