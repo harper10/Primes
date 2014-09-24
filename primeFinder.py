@@ -17,4 +17,4 @@ def p_test_range(num, start, end, plist):
     return True
 
 if __name__ == "__main__":
-    print(p_test_range(10, 2, 5, [2,3,5,7,11,13,17,23])
+    print(p_test_range(10, 3, 3, [2,3,5,7,11,13,17,23]))
