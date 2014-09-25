@@ -3,7 +3,7 @@
 This is a primeFinder v2.0.
 """
 from math import sqrt
-
+from datetime import datetime
 
 
 def p_test_range(num, start, end, plist):
@@ -18,6 +18,7 @@ def p_test_range(num, start, end, plist):
         if num % p == 0:
             return False
     return True
+
 
 def p_test(num, plist):
     """
@@ -39,6 +40,7 @@ def p_test(num, plist):
     interval_list = [p for p in plist if p <= sqrt(num)]
     return p_test_range(num, 0, len(interval_list), interval_list)  #TODO I need to find out how to create threads and replace this call
 
+
 def populate_plist(plist, end_num):
     """
     This function extends the length of plist by testing all of the numbers after the
@@ -57,6 +59,7 @@ def populate_plist(plist, end_num):
             plist += [num]
     #new_primes = [num for num in test_nums if p_test(num, plist + new_primes)]
     return plist + new_primes
+
 
 def read_plist(filename):
     """
@@ -85,8 +88,18 @@ def save_plist(filename, plist):
 if __name__ == "__main__":
     #print(23**2)
     #print(sqrt(6203))
-    print(p_test(2, [2, 3, 5, 7, 11, 13, 17, 23]))
-    print(populate_plist([], 6203))
-    print(populate_plist(read_plist('./PrimeList'), 6203))
-
-    save_plist('./plist.txt', [2, 3, 5, 7, 11, 13, 17, 23])
+    #print(p_test(2, [2, 3, 5, 7, 11, 13, 17, 23]))
+    #print(populate_plist([], 6203))
+    #print(populate_plist(read_plist('./PrimeList'), 6203))
+    n = 123456789
+    a = datetime.now()
+    plist = read_plist('./plist2.txt')
+    plist = populate_plist(plist, 60000)
+    b = datetime.now()
+    print("The prime list took {} to read/populate up to 60000 primes".format(b - a))
+    print(p_test(n, plist))
+    c = datetime.now()
+    print("Testing {} took {} time".format(n, (c-b)))
+    save_plist('./plist2.txt', plist)
+    #The prime list took 0:00:46.870586 to populate up to 50000
+    #The prime list took 0:00:00.003392 to read up to 50000 primes
