@@ -35,7 +35,7 @@ def p_test(num, plist):
         print("The list is not populated with enough numbers to test number effectively")
         return None
         #TODO I need to make sure that this is the correct thing that I want to return
-    """  #TODO I need to make sure to add this function on the things that call it
+    """  #TODO I need to make sure to add this function on the things that call it instead
     interval_list = [p for p in plist if p <= sqrt(num)]
     return p_test_range(num, 0, len(interval_list), interval_list)  #TODO I need to find out how to create threads and replace this call
 
@@ -47,15 +47,46 @@ def populate_plist(plist, end_num):
     :param end_num: the last number to test
     :return: [int]
     """
-    test_nums = [num for num in range(2, end_num+1) if num > plist[-1]]
-    new_primes = [num for num in test_nums if p_test(num, plist)]
-    print(p_test(24, plist))
-    plist += new_primes
+    new_primes = []
+    if len(plist) == 0:
+        test_nums = [num for num in range(2, end_num+1)]
+    else:
+        test_nums = [num for num in range(2, end_num+1) if num > plist[-1]]
+    for num in test_nums:
+        if p_test(num, plist):
+            plist += [num]
+    #new_primes = [num for num in test_nums if p_test(num, plist + new_primes)]
+    return plist + new_primes
+
+def read_plist(filename):
+    """
+    This file will take in a filename and read the primes off of it
+    :param filename:
+    :return: [int]
+    """
+    with open(filename, 'r') as fin:
+        plist = fin.readlines()
+        plist = [int(p) for p in plist]
     return plist
 
+
+def save_plist(filename, plist):
+    """
+    This function takes in a
+    :param filename:
+    :param plist:
+    :return:
+    """
+    with open(filename, 'w')as fout:
+        plist = [str(p)+"\n" for p in plist]
+        fout.writelines(plist)
+    return
 
 if __name__ == "__main__":
     #print(23**2)
     #print(sqrt(6203))
-    print(p_test(24, [2, 3, 5, 7, 11, 13, 17, 23]))
-    print(populate_plist([2, 3, 5, 7, 11, 13, 17, 23], 6203))
+    print(p_test(2, [2, 3, 5, 7, 11, 13, 17, 23]))
+    print(populate_plist([], 6203))
+    print(populate_plist(read_plist('./PrimeList'), 6203))
+
+    save_plist('./plist.txt', [2, 3, 5, 7, 11, 13, 17, 23])
