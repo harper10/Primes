@@ -41,6 +41,33 @@ def p_test(num, plist):
     return p_test_range(num, 0, len(interval_list), interval_list)  #TODO I need to find out how to create threads and replace this call
 
 
+def p_test_aks(num):
+    """
+    This tests for primality using the Agrawal-kayal-saxena (AKS)
+    :param num:
+    :return:
+    """
+    if (num == a^b):
+        # for some integer a and for some integer b > 1
+        # p is composite
+        return False
+    r = 2
+
+    while r < num:
+        if gcd(num, r) is not 1:
+            return True
+        if r is prime > 2:
+            # q = largest factor of r-1
+            if (q > (4 . sqrt(r) . log(num))) and (num ^((r-1)/q)%r is not 1):
+                break
+        r += 1
+
+    for a in range(1,(2 . sqrt(r) . log(num))):
+        if ((x-a)^num is not (x^num - a)%(x^r - 1)):
+            return False
+    return True
+
+
 def populate_plist(plist, end_num):
     """
     This function extends the length of plist by testing all of the numbers after the
@@ -86,17 +113,13 @@ def save_plist(filename, plist):
     return
 
 if __name__ == "__main__":
-    #print(23**2)
-    #print(sqrt(6203))
-    #print(p_test(2, [2, 3, 5, 7, 11, 13, 17, 23]))
-    #print(populate_plist([], 6203))
-    #print(populate_plist(read_plist('./PrimeList'), 6203))
-    n = 123456789
+    n = 123456789987654321
     a = datetime.now()
-    plist = read_plist('./plist2.txt')
-    plist = populate_plist(plist, 60000)
+    # plist = read_plist('./plist.txt')
+    plist = [2, 3, 5]
+    plist = populate_plist(plist, int(sqrt(n)+1))
     b = datetime.now()
-    print("The prime list took {} to read/populate up to 60000 primes".format(b - a))
+    print("The prime list took {} to read/populate up to {} primes".format(b - a, int(sqrt(n)+1)))
     print(p_test(n, plist))
     c = datetime.now()
     print("Testing {} took {} time".format(n, (c-b)))
