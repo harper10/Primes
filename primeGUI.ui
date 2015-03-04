@@ -109,7 +109,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -135,7 +135,7 @@
      <item>
       <widget class="QCheckBox" name="miller_checkBox">
        <property name="text">
-        <string>Miller-Rabbin</string>
+        <string>Miller-Rabin</string>
        </property>
       </widget>
      </item>
@@ -148,7 +148,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>450</x>
