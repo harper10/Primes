@@ -114,10 +114,10 @@ def save_plist(filename, plist):
     return
 
 if __name__ == "__main__":
-    n = 12345678900987654321
+    n = 100 #12345678900987654321
     a = datetime.now()
-    plist = read_plist('./plist2.txt')
-    #plist = [2, 3, 5]
+    #plist = read_plist('./plist2.txt')
+    plist = [2, 3, 5]
     plist = populate_plist(plist, int(sqrt(n)+1))
     b = datetime.now()
     print("The prime list took {} to read/populate up to {} primes".format(b - a, int(sqrt(n)+1)))
